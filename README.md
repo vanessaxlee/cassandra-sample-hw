@@ -6,15 +6,15 @@ The purpose of this homework assignment is to compare the read and write speeds 
 
 ## Part 1: Generate Data
 Generate two datasets, one representing a product log with all products and their price, one stores all the shopping carts, the products in it and relevant information such as quantity of the product. For example, you datasets may contain the following columns:
-* Shopping Carts
-** cart ID (int)
-** item ID (int)
-** timestamp (timestamp)
-** quantity (int)
-** primary key (cart ID, item ID)
-* Product Log 
-** item ID (int)
-** price (int)
+- Shopping Carts
+  - cart ID (int)
+  - item ID (int)
+  - timestamp (timestamp)
+  - quantity (int)
+  - primary key (cart ID, item ID)
+- Product Log 
+  - item ID (int)
+  - price (int)
 
 You may use any language you prefer to generate the datasets. Make sure to document any assumptions you make for the data model here, and in both SQL and Cassandra.
 
