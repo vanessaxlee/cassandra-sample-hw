@@ -16,7 +16,7 @@ Product Log
 Item id (int)
 Price (int)
 
-* You may use any language you prefer to generate the datasets. Make sure to document any assumptions you make for the data model here, and in both SQL and Cassandra.
+You may use any language you prefer to generate the datasets. Make sure to document any assumptions you make for the data model here, and in both SQL and Cassandra.
 
 ## Part 2: Comparing read and write speeds of mySQL and Cassandra
 Queries to support:
@@ -29,10 +29,13 @@ Insert data into a MySQL table to support query.
 Insert data into a MySQL table to support query 
 2. What is the write speed? What is the read speed?
 ### Cassandra
-* Make sure to think about what is needed to support queries before modeling/creating tables.
+Make sure to think about what is needed to support queries before modeling/creating tables.
 Insert data into a Cassandra table to support query.
+
 1. What is the write speed? What is the read speed?
-Insert data into a Cassandra table to support query 
+
+Insert data into a Cassandra table to support query.
+
 2. What is the write speed? What is the read speed?
 ### Comparison
 Is the write speed for inserting data generally faster in mySQL or Cassandra?
