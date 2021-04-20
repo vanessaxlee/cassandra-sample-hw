@@ -18,17 +18,22 @@ def randomDate(start, end):
 
 
 def data_generator():
-    # create items_carts table with 1000 random customers
+    # create items in carts data with 1000 carts/customers,
+    # each with a cart_id, item_id, random timestamp, and quantity of the item
     cart_id = []
     item_id = []
     time = []
     quantity = []
 
+    # for each cart (1 to 1000)
     for i in range(1000):
         items_so_far = []
+        # generate a random number of product types in cart
         num_items = random.randint(1, 10)
         for j in range(num_items):
+            # generate a random product id for random product to put in cart
             it_id = random.randint(1, 50)
+            # generate new product id if already in cart
             while it_id in items_so_far:
                 it_id = random.randint(1, 50)
 
@@ -36,16 +41,21 @@ def data_generator():
             item_id.append(it_id)
             items_so_far.append(it_id)
             time.append(randomDate("01-02-2021 00:00:00", "10-02-2021 00:00:00"))
+            # generate a random quantity from 1 to 5 for product
             quantity.append(random.randint(1, 5))
 
     items_carts = {'cart_id': cart_id, 'item_id': item_id, 'time': time, 'quantity': quantity}
     df = pd.DataFrame(items_carts, columns=['cart_id', 'item_id', 'time', 'quantity'])
     df.to_csv('items_carts.csv', index=False)
 
-    # products_table
+
+    # create product log data, with product id's and prices
     product_id = []
     price = []
+
+    # generate product id's from 1 to 50
     for i in range(50):
+        # generate a random price from 1 to 10
         p = random.randint(1, 10)
 
         product_id.append(i + 1)
@@ -60,7 +70,7 @@ def create_keyspace_and_tables(session):
     # create and use keyspace named 'shoppingcart'
     session.execute('DROP KEYSPACE IF EXISTS shoppingcart;')
     session.execute(
-        'CREATE KEYSPACE IF NOT EXISTS shoppingcart WITH replication = {\'class\':\'SimpleStrategy\', \'replication_factor\':3};')
+        'CREATE KEYSPACE shoppingcart WITH replication = {\'class\':\'SimpleStrategy\', \'replication_factor\':3};')
     session.execute('USE shoppingcart;')
 
     # create the item_carts table
@@ -68,6 +78,10 @@ def create_keyspace_and_tables(session):
     session.execute(
         'CREATE TABLE item_carts(cart_id int, item_id int, time timestamp, quantity int, price int,'
         + 'PRIMARY KEY ((cart_id, item_id)));')
+    create_index = "CREATE INDEX find_item ON shoppingcart.item_carts (item_id);"
+    session.execute(create_index)
+    create_sec_index = "CREATE INDEX find_cart ON shoppingcart.item_carts (cart_id);"
+    session.execute(create_sec_index)
 
     # create the products table
     session.execute('DROP TABLE IF EXISTS shoppingcart.products;')
@@ -77,7 +91,7 @@ def create_keyspace_and_tables(session):
     print("Created!")
 
 
-def insert_item_carts(session, product_data_filepath, cart_data_filepath):
+def insert_item_carts(session,product_data_filepath, cart_data_filepath):
     session.execute('USE shoppingcart;')
 
     products = pd.read_csv(product_data_filepath, header=0)
@@ -100,6 +114,7 @@ def insert_item_carts(session, product_data_filepath, cart_data_filepath):
             quantity = columns[3]
             quantity = int(float(quantity))
 
+            # find price of current product using products.csv data that has been inserted into a dataframe
             price = products[products['product_id'] == item_id]['price'].values[0]
 
             prepared = session.prepare("""
@@ -111,12 +126,13 @@ def insert_item_carts(session, product_data_filepath, cart_data_filepath):
 
     # closing the file
     item_carts.close()
+
     later = datetime.datetime.now()
     time_insert = later - now
     print("item carts insert speed = ", time_insert)
 
 
-def insert_products(session, filepath):
+def insert_products(session,filepath):
     session.execute('USE shoppingcart;')
 
     with open(filepath, "r") as products:
@@ -140,6 +156,7 @@ def insert_products(session, filepath):
 
     # closing the file
     products.close()
+
     later = datetime.datetime.now()
     time_insert = later - now
     print("products insert speed = ", time_insert)
@@ -147,51 +164,51 @@ def insert_products(session, filepath):
 
 def find_num_carts(session, product_id):
     p_id = str(product_id)
-    #query1 = "CREATE INDEX find_item ON shoppingcart.item_carts (item_id);"
     query2 = "SELECT COUNT(*) FROM item_carts WHERE item_id = " + p_id + ";"
 
     session.execute('USE shoppingcart;')
-    #session.execute(query1)
+    now = datetime.datetime.now()
     count = session.execute(query2)
+    later = datetime.datetime.now()
 
+    time_insert = later - now
     print("number of carts with product #", product_id, ": ", count.one().count)
-
+    print("find number of carts with given product read speed = ", time_insert)
 
 def find_total(session, cart_id):
-    # find all the items in this cart
-    # find the prices for all items
-    # sum them
     query = "SELECT sum (price) FROM shoppingcart.item_carts where cart_id = " + str(cart_id) + ";"
-    #query2 = "CREATE INDEX find_cart ON shoppingcart.item_carts (cart_id);"
     session.execute('USE shoppingcart;')
-    #session.execute(query2)
+
+    now = datetime.datetime.now()
     price = session.execute(query)
+    later = datetime.datetime.now()
+
+    time_insert = later - now
     print("total for cart ", cart_id, ": ", price.one().system_sum_price)
+    print("find total for cart read speed = ", time_insert)
 
 
 def main():
     cluster = Cluster()
     session = cluster.connect()
     # generate random shopping cart data
-    #data_generator()
+    data_generator()
 
     # create keyspace and tables
-    #create_keyspace_and_tables(session)
+    create_keyspace_and_tables(session)
 
     # insert data into item carts table
-    #insert_item_carts(session, 'products.csv', 'items_carts.csv')
+    insert_item_carts(session, 'products.csv', 'items_carts.csv')
 
     # insert data into products table
-    #insert_products(session, 'products.csv')
+    insert_products(session, 'products.csv')
     print("Finished!")
 
-    # Q1 - Find how many people have a given item in their carts. Find read speed
+    # Q1 - Find how many people have item 3 in their carts
     find_num_carts(session, 3)
 
-    # Q2 -  Find total for a person’s cart
+    # Q2 -  Find total for cart 80
     find_total(session, 80)
-
-    # modify the data
 
     session.shutdown()
 
