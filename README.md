@@ -25,8 +25,11 @@ Queries to support:
 
 ### MySQL
 Insert data into a MySQL table to support query.
+
 1. What is the write speed? What is the read speed?
-Insert data into a MySQL table to support query 
+
+Insert data into a MySQL table to support query. 
+
 2. What is the write speed? What is the read speed?
 ### Cassandra
 Make sure to think about what is needed to support queries before modeling/creating tables.
