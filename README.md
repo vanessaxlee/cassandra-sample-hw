@@ -18,31 +18,26 @@ Generate two datasets, one representing a product log with all products and thei
 
 You may use any language you prefer to generate the datasets. Make sure to document any assumptions you make for the data model here, and in both SQL and Cassandra.
 
-## Part 2: Comparing Read and Write Speeds of MySQL and Cassandra
+## Part 2: Comparing read and write speeds of mySQL and Cassandra
 Queries to support:
-* Query 1: Find the total price for all items in cart with cart ID = 80.
-* Query 2: Find how many people have the product with item ID = 3 in their carts.
+	Query 1: Find how many people have the product with item id 3 in their carts.
+    Query 2: Find the total price for all items in cart with cart id 80.
 
 ### MySQL
-Insert data into a MySQL table to support query.
+1) Insert product log data into a MySQL table. What is the write speed?
+2) Insert items in cart data into a MySQL table. What is the write speed?
+3) Run Query 1 in mySQL. What is the read speed?
+4) Run Query 2 in mySQL. What is the read speed?
 
-1. What is the write speed? What is the read speed?
-
-Insert data into a MySQL table to support query. 
-
-2. What is the write speed? What is the read speed?
 ### Cassandra
-Make sure to think about what is needed to support queries before modeling/creating tables.
-Insert data into a Cassandra table to support query.
+** Make sure to think about what is needed to support queries before modeling/creating tables.
+1) Insert data into a Cassandra table to support Query 1. What is the write speed? What is the read speed?
+2) Insert data into a Cassandra table to support Query 2. What is the write speed? What is the read speed?
 
-1. What is the write speed? What is the read speed?
+### Optional Comparison
+1) Is the write speed for inserting data generally faster in mySQL or Cassandra?
+2) Is the read speed for querying data generally faster in mySQL or Cassandra?
 
-Insert data into a Cassandra table to support query.
-
-2. What is the write speed? What is the read speed?
-### Comparison
-Is the write speed for inserting data generally faster in mySQL or Cassandra?
-Is the read speed for querying data generally faster in mySQL or Cassandra?
 
 ## Resources
 Install Python Cassandra driver via terminal ([instructions](https://docs.datastax.com/en/developer/python-driver/3.25/installation/)).
