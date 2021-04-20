@@ -20,8 +20,8 @@ You may use any language you prefer to generate the datasets. Make sure to docum
 
 ## Part 2: Comparing read and write speeds of mySQL and Cassandra
 Queries to support:
-	Query 1: Find the total price for all items in cart with cart id 80.
-	Query 2: Find how many people have the product with item id 3 in their carts.
+* Query 1: Find the total price for all items in cart with cart ID = 80.
+* Query 2: Find how many people have the product with item ID = 3 in their carts.
 
 ### MySQL
 Insert data into a MySQL table to support query.
