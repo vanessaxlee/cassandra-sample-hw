@@ -18,7 +18,7 @@ Price (int)
 
 You may use any language you prefer to generate the datasets. Make sure to document any assumptions you make for the data model here, and in both SQL and Cassandra.
 
-## Part 2: Comparing read and write speeds of mySQL and Cassandra
+## Part 2: Comparing Read and Write Speeds of MySQL and Cassandra
 Queries to support:
 * Query 1: Find the total price for all items in cart with cart ID = 80.
 * Query 2: Find how many people have the product with item ID = 3 in their carts.
