@@ -6,6 +6,7 @@ import datetime
 import csv
 
 
+# generate a random date between given start and end dates
 def randomDate(start, end):
     frmt = '%d-%m-%Y %H:%M:%S'
 
@@ -17,6 +18,7 @@ def randomDate(start, end):
     return dt
 
 
+# generate data for items in carts and product logs and export to csv files
 def data_generator():
     # create items in carts data with 1000 carts/customers,
     # each with a cart_id, item_id, random timestamp, and quantity of the item
@@ -65,7 +67,8 @@ def data_generator():
     df = pd.DataFrame(products, columns=['product_id', 'price'])
     df.to_csv('products.csv', index=False)
 
-
+# create keyspace in Cassandra by connecting to given Cluster session,
+# and create tables for items in carts and product log
 def create_keyspace_and_tables(session):
     # create and use keyspace named 'shoppingcart'
     session.execute('DROP KEYSPACE IF EXISTS shoppingcart;')
@@ -90,7 +93,7 @@ def create_keyspace_and_tables(session):
 
     print("Created!")
 
-
+# insert data into items in carts table, combining data from product log dataset and items in carts dataset
 def insert_item_carts(session,product_data_filepath, cart_data_filepath):
     session.execute('USE shoppingcart;')
 
@@ -131,7 +134,7 @@ def insert_item_carts(session,product_data_filepath, cart_data_filepath):
     time_insert = later - now
     print("item carts insert speed = ", time_insert)
 
-
+# insert data into product log table from given filepath to csv file
 def insert_products(session,filepath):
     session.execute('USE shoppingcart;')
 
@@ -161,7 +164,7 @@ def insert_products(session,filepath):
     time_insert = later - now
     print("products insert speed = ", time_insert)
 
-
+# find number of carts that contains product with given product id after connecting to given Cluster session
 def find_num_carts(session, product_id):
     p_id = str(product_id)
     query2 = "SELECT COUNT(*) FROM item_carts WHERE item_id = " + p_id + ";"
@@ -175,6 +178,7 @@ def find_num_carts(session, product_id):
     print("number of carts with product #", product_id, ": ", count.one().count)
     print("find number of carts with given product read speed = ", time_insert)
 
+# find total price for cart with given cart id after connecting to given Cluster session
 def find_total(session, cart_id):
     query = "SELECT sum (price) FROM shoppingcart.item_carts where cart_id = " + str(cart_id) + ";"
     session.execute('USE shoppingcart;')
@@ -188,6 +192,8 @@ def find_total(session, cart_id):
     print("find total for cart read speed = ", time_insert)
 
 
+# connect to Cassandra, generate datasets, insert data into tables in Cassandra, and run queries to find
+# number of carts with a given product in it and the total price for items in a given cart
 def main():
     cluster = Cluster()
     session = cluster.connect()
