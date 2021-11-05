@@ -30,7 +30,7 @@ Queries to support:
 4) Run Query 2 in mySQL. What is the read speed?
 
 ### Cassandra
-** Make sure to think about what is needed to support queries before modeling/creating tables.
+**Make sure to think about what is needed to support queries before modeling/creating tables.**
 1) Insert data into a Cassandra table to support Query 1. What is the write speed? What is the read speed?
 2) Insert data into a Cassandra table to support Query 2. What is the write speed? What is the read speed?
 
